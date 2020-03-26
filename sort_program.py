@@ -26,7 +26,7 @@ def main():
         num_list.append(Value(i))
     width = dimensions[0]/len(num_list)
     iteration = 0
-    algorithms = ["bubble", "selection", "insertion"]
+    algorithms = ["bubble", "selection"]
     current = algorithms[0]
 
     #Game/Display loop
@@ -109,6 +109,7 @@ def main():
                     for i, entry in enumerate(num_list):
                         entry.value = num[i]
                     current = algorithms[1]
+                    print(current)
                     temp = algorithms[0]
                     del algorithms[0]
                     algorithms.append(temp)
