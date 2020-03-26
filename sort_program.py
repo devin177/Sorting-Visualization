@@ -26,6 +26,8 @@ def main():
         num_list.append(Value(i))
     width = dimensions[0]/len(num_list)
     iteration = 0
+    algorithms = ["bubble", "selection", "insertion"]
+    current = algorithms[0]
 
     #Game/Display loop
     #Will set the background to white
@@ -39,9 +41,12 @@ def main():
         pos = pygame.mouse.get_pos()
 
         #event handling
+        #handling for exiting the program
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+            #Handling for changing the color of buttons
             if event.type == pygame.MOUSEMOTION:
                 if finish_button.above(pos):
                     finish_button.color = (0, 255, 100)
@@ -55,25 +60,59 @@ def main():
                     switch_algorithm_button.color = (255, 255, 255)
                 else:
                     switch_algorithm_button.color = (200, 200, 200)
+
+            #handling for iterating through the sort
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if forward_button.above(pos):
-                    for j in range(0, len(num_list)-iteration-1):
-                        temp = num_list[j].value
-                        if num_list[j].value > num_list[j+1].value:
-                            num_list[j].value = num_list[j+1].value
-                            num_list[j+1].value = temp
-                    iteration += 1
-
-                if finish_button.above(pos):
-                    for i in range(0, len(num_list)):
+                    if current == "bubble":
                         for j in range(0, len(num_list)-iteration-1):
                             temp = num_list[j].value
                             if num_list[j].value > num_list[j+1].value:
                                 num_list[j].value = num_list[j+1].value
                                 num_list[j+1].value = temp
+                        iteration += 1
+
+                    if current == "selection" and iteration < len(num_list):
+                        maximum = num_list[0].value
+                        index = 0
+                        for j in range(1, len(num_list)-iteration):
+                            if num_list[j].value > maximum:
+                                maximum = num_list[j].value
+                                index = j
+                        num_list[index].value = num_list[len(num_list)-iteration-1].value
+                        num_list[len(num_list)-iteration-1].value = maximum
+                        iteration += 1
+
+
+                if finish_button.above(pos):
+                    if current == "bubble":
+                        for i in range(len(num_list)):
+                            for j in range(0, len(num_list)-iteration-1):
+                                temp = num_list[j].value
+                                if num_list[j].value > num_list[j+1].value:
+                                    num_list[j].value = num_list[j+1].value
+                                    num_list[j+1].value = temp
+
+                    if current == "selection":
+                        for i in range(len(num_list)):
+                            maximum = num_list[0].value
+                            index = 0
+                            for j in range(1, len(num_list)-i):
+                                if num_list[j].value > maximum:
+                                    maximum = num_list[j].value
+                                    index = j
+                            num_list[index].value = num_list[len(num_list)-i-1].value
+                            num_list[len(num_list)-i-1].value = maximum
 
                 if switch_algorithm_button.above(pos):
                     iteration = 0
+                    for i, entry in enumerate(num_list):
+                        entry.value = num[i]
+                    current = algorithms[1]
+                    temp = algorithms[0]
+                    del algorithms[0]
+                    algorithms.append(temp)
+
 
         #draw each member of the list
         for i, entry in enumerate(num_list):
